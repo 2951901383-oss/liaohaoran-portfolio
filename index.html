@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO 与社交媒体分享标签 (Open Graph) -->
+    <title>廖浩然 | 视觉驱动全案运营作品集</title>
+    <meta name="description" content="跨界全案运营大脑。从视觉传达到商业转化的精密闭环构建者。">
+    <meta property="og:title" content="廖浩然 | 视觉驱动全案运营">
+    <meta property="og:description" content="从柏林之声到大地之野，建立高客单价转化壁垒。">
+    <meta property="og:image" content="images/og-cover.jpg"> 
+    <meta property="og:type" content="website">
+
+    <!-- 强制预载入核心字体，杜绝 FOUT 效应 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" preload>
+
+    <style>
+        :root {
+            /* 东方阴翳美学与高奢色彩系统 */
+            --bg-deep: #050505;
+            --text-primary: #E8E6E1;
+            --text-secondary: #9A9891;
+            --accent-gold: #C2B8A3;
+            --accent-glow: rgba(194, 184, 163, 0.15);
+            --glass-bg: rgba(15, 15, 15, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            --font-main: 'Montserrat', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+            --fluid-easing: cubic-bezier(0.19, 1, 0.22, 1);
+            --spring-easing: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 隐藏原生鼠标 (仅限桌面端) */
+        @media (pointer: fine) { body { cursor: none; } }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* --- 动态胶片噪点与深渊暗流 --- */
+        .ambient-bg {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background-color: var(--bg-deep); 
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E"),
+                radial-gradient(120% 80% at 50% 0%, rgba(194, 184, 163, 0.05) 0%, transparent 50%),
+                radial-gradient(140% 90% at 50% 100%, rgba(194, 184, 163, 0.08) 0%, rgba(30, 28, 25, 0.3) 40%, var(--bg-deep) 80%);
+            background-blend-mode: overlay, screen, normal;
+            animation: ambientBreathe 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes ambientBreathe {
+            0% { transform: scale(1); filter: brightness(0.9); }
+            100% { transform: scale(1.05); filter: brightness(1.1); }
+        }
+
+        /* --- 悬浮微尘 Canvas --- */
+        #dustCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.8; }
+
+        /* --- 自定义雷达鼠标 --- */
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none; display: none; 
+        }
+        @media (pointer: fine) { .cursor-dot, .cursor-outline { display: block; } }
+        .cursor-dot { width: 5px; height: 5px; background-color: var(--accent-gold); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+        .cursor-outline { width: 36px; height: 36px; border: 1px solid rgba(194, 184, 163, 0.4); transition: width 0.4s var(--fluid-easing), height 0.4s var(--fluid-easing), border-color 0.4s, backdrop-filter 0.4s; }
+        body.cursor-hover .cursor-dot { width: 8px; height: 8px; background-color: #FFF; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        body.cursor-hover .cursor-outline { width: 65px; height: 65px; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); backdrop-filter: blur(4px); }
+
+        /* 优雅降级：全局img设定（会被特定模块强行覆盖释放） */
+        img {
+            color: transparent; /* 隐藏原生碎裂图标与文字 */
+            position: relative;
+            display: block; 
+            width: 100%; height: 100%; object-fit: cover;
+            background-color: transparent;
+        }
+        img::after {
+            content: "ASSET MISSING";
+            position: absolute; inset: 0;
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: rgba(194, 184, 163, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem; letter-spacing: 0.2em; text-align: center;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+
+        /* --- 玻璃拟态卡片基类 --- */
+        .glass-card {
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative; overflow: hidden;
+            will-change: transform; transform-style: preserve-3d;
+        }
+        .glass-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(194, 184, 163, 0.05), transparent);
+            transform: skewX(-20deg); pointer-events: none;
+            animation: shimmer 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        @keyframes shimmer { 0%, 60% { left: -100%; } 100% { left: 200%; } }
+
+        /* ==================== 导航与控件区 ==================== */
+
+        /* 顶部消散遮罩 (Z轴防护机制) */
+        .top-mask {
+            position: fixed; top: 0; left: 0; width: 100%; height: 140px;
+            background: linear-gradient(to bottom, rgba(5,5,5,0.98) 0%, rgba(5,5,5,0.7) 40%, transparent 100%);
+            z-index: 90; pointer-events: none;
+        }
+
+        /* Logo */
+        .fixed-logo {
+            position: fixed; top: 2.5rem; left: 5%; z-index: 100;
+            font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 600;
+            letter-spacing: 0.2em; color: var(--title-color); pointer-events: auto;
+            cursor: none; text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+
+        /* 右上角：声学旋钮/黑胶进度指示器 */
+        .progress-knob-wrapper {
+            position: fixed; top: 2.5rem; right: 2rem; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none;
+        }
+        .knob-container {
+            width: 44px; height: 44px; border-radius: 50%;
+            border: 1px solid rgba(194, 184, 163, 0.4);
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .knob-dot {
+            width: 4px; height: 4px; background: var(--accent-gold); border-radius: 50%;
+            position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 0 8px var(--accent-gold);
+        }
+        .knob-inner {
+            width: 100%; height: 100%; border-radius: 50%; position: relative;
+            will-change: transform;
+        }
+        .progress-text {
+            font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--accent-gold);
+            letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+        }
+
+        /* 数学级中心对齐的中控台导航 */
+        .control-panel {
+            position: fixed; top: 2.5rem; right: 6rem; z-index: 100;
+            height: 44px; display: flex; align-items: center; gap: 2rem; 
+            pointer-events: auto; padding-right: 1.5rem;
+        }
+        .nav-item {
+            font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 500;
+            letter-spacing: 0.15em; color: var(--text-secondary); text-decoration: none;
+            padding-bottom: 0.3rem; cursor: none; position: relative;
+            transition: color 0.4s var(--fluid-easing);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+        .nav-item::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 1px;
+            background: var(--accent-gold); transition: all 0.4s var(--fluid-easing);
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+        .nav-item:hover { color: var(--title-color); }
+        .nav-item.active { color: var(--title-color); font-weight: 600; }
+        .nav-item.active::after { width: 100%; left: 0; }
+
+        /* ==================== 页面区块排版 ==================== */
+
+        .hero-block { 
+            position: relative; height: 100vh; width: 100vw; overflow: hidden;
+            display: flex; flex-direction: column; 
+            justify-content: flex-end; 
+            padding-bottom: 8vh; 
+        }
+        .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.6; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(5,5,5,0.1) 0%, rgba(5,5,5,0.6) 50%, var(--bg-deep) 100%); z-index: -1; }
+        
+        .hero-content { position: relative; z-index: 2; width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 5%; text-align: center; }
+
+        .container { max-width: 1440px; margin: 0 auto; padding: 0 5%; position: relative; z-index: 10; }
+        
+        .section-block { padding: 5rem 0; position: relative; scroll-margin-top: 6rem; }
+
+        .section-title { font-size: 0.8rem; color: var(--accent-gold); letter-spacing: 0.2em; margin-bottom: 1rem; text-transform: uppercase;}
+        .section-headline { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 400; color: var(--title-color); margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+        
+        .section-sub { font-size: 0.9rem; opacity: 0.6; line-height: 1.6; max-width: 600px; margin-bottom: 4rem; }
+        
+        .logic-subtitle { font-size: 0.95rem; opacity: 0.6; margin-top: 1rem; line-height: 1.6; color: var(--accent-gold); letter-spacing: 0.05em; }
+
+        /* --- 动画状态类 --- */
+        .anim-element {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 1s var(--fluid-easing), transform 1s var(--fluid-easing);
+            will-change: opacity, transform;
+        }
+        .anim-element.active { opacity: 1; transform: translateY(0); }
+        .d-1 { transition-delay: 0.1s; } .d-2 { transition-delay: 0.2s; } 
+        .d-3 { transition-delay: 0.3s; } .d-4 { transition-delay: 0.4s; }
+
+        /* 01. Hero Section */
+        .hero-slogan { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.2; letter-spacing: 0.05em; margin-bottom: 2rem; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .hero-slogan span { font-weight: 500; color: var(--title-color); }
+        .hero-metrics { display: flex; justify-content: center; gap: 5rem; margin-top: 3rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 3rem; }
+        .h-metric-item { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+        .h-metric-num { font-size: 2.5rem; font-weight: 400; font-family: 'Montserrat', sans-serif; }
+        .h-metric-lbl { font-size: 0.7rem; letter-spacing: 0.1em; opacity: 0.6; text-transform: uppercase; }
+
+        /* 02. Profile */
+        .profile-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 5rem; align-items: center; max-width: 1100px; margin: 0 auto; }
+        .profile-avatar { width: 100%; max-width: 280px; aspect-ratio: 1; border-radius: 50%; padding: 0; margin: 0 auto; }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; filter: grayscale(0.2) contrast(1.1); }
+        .resume-list { list-style: none; margin-top: 1rem; }
+        .resume-list li { padding: 1.5rem 0; border-top: 1px solid rgba(255,255,255,0.05); }
+        .resume-list li:last-child { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .r-time { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--accent-gold); letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem; }
+        .r-title { font-size: 1.1rem; font-weight: 500; color: var(--title-color); display: block; margin-bottom: 0.5rem; }
+        .r-desc { font-size: 0.85rem; opacity: 0.7; line-height: 1.6; }
+
+        /* 03. 年度数据叙事 (Data Narrative) */
+        .data-wall-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+            margin: 4rem 0; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4rem;
+        }
+        .data-stat { cursor: none; }
+        .stat-value {
+            font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: clamp(3rem, 5vw, 4.5rem);
+            color: var(--title-color); line-height: 1; margin-bottom: 0.5rem;
+            transition: color 0.5s var(--fluid-easing), text-shadow 0.5s var(--fluid-easing), transform 0.5s var(--fluid-easing);
+            display: inline-block;
+        }
+        .data-stat:hover .stat-value {
+            color: var(--accent-gold); text-shadow: 0 0 40px rgba(194, 184, 163, 0.6);
+            transform: scale(1.05);
+        }
+        .stat-label { font-size: 0.8rem; letter-spacing: 0.15em; opacity: 0.6; text-transform: uppercase; }
+
+        .data-fusion-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; margin-top: 2rem;
+        }
+        
+        /* 雷达图 */
+        .radar-box {
+            width: 100%; max-width: 360px; aspect-ratio: 1; margin: 0 auto;
+            display: flex; justify-content: center; align-items: center;
+            border-radius: 50%; border: 1px dashed rgba(255,255,255,0.05); position: relative;
+        }
+        .radar-box svg { width: 80%; height: 80%; overflow: visible; filter: drop-shadow(0 0 20px rgba(194, 184, 163, 0.2)); }
+        .radar-polygon {
+            fill: rgba(194, 184, 163, 0.08); stroke: var(--accent-gold); stroke-width: 1.5;
+            transition: fill 0.8s, filter 0.8s;
+        }
+        .radar-box:hover .radar-polygon { fill: rgba(194, 184, 163, 0.15); filter: drop-shadow(0 0 15px var(--accent-gold)); }
+        .radar-dot { fill: var(--bg-deep); stroke: var(--accent-gold); stroke-width: 2; }
+        .radar-label {
+            position: absolute; font-family: 'Montserrat', sans-serif; font-size: 0.7rem;
+            letter-spacing: 0.1em; color: var(--text-secondary); text-transform: uppercase;
+        }
+        .rl-top { top: 5%; left: 50%; transform: translateX(-50%); }
+        .rl-tr { top: 25%; right: 0; }
+        .rl-br { bottom: 25%; right: 0; }
+        .rl-bot { bottom: 5%; left: 50%; transform: translateX(-50%); }
+        .rl-bl { bottom: 25%; left: 0; }
+        .rl-tl { top: 25%; left: 0; }
+
+        /* 呼吸态时间轴 */
+        .timeline-box { position: relative; padding-left: 2rem; display: flex; flex-direction: column; gap: 3rem; }
+        .timeline-track { position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.1); }
+        .timeline-item { position: relative; cursor: none; }
+        .timeline-dot {
+            position: absolute; left: -2.35rem; top: 0.5rem; width: 12px; height: 12px;
+            border-radius: 50%; border: 1px solid var(--accent-gold); background: var(--bg-deep);
+            transition: all 0.4s var(--fluid-easing);
+        }
+        .timeline-content {
+            padding: 1.5rem; transition: all 0.5s var(--fluid-easing);
+            opacity: 0.5; transform: scale(0.98); transform-origin: left center;
+        }
+        .timeline-item:hover .timeline-dot { background: var(--accent-gold); box-shadow: 0 0 15px var(--accent-gold); }
+        .timeline-item:hover .timeline-content { opacity: 1; transform: scale(1); border-color: rgba(194, 184, 163, 0.4); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .tl-time { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--accent-gold); letter-spacing: 0.1em; margin-bottom: 0.5rem; display: block; }
+        .tl-title { font-size: 1.1rem; font-weight: 500; color: var(--title-color); margin-bottom: 0.5rem; }
+        .tl-desc { font-size: 0.85rem; opacity: 0.8; line-height: 1.6; }
+
+
+        /* 04. Brand Operations */
+        .ops-list { display: flex; flex-direction: column; gap: 8rem; margin-top: 5rem; }
+        .ops-item { display: flex; align-items: center; gap: 6rem; }
+        
+        .ops-item:nth-child(even) { flex-direction: row-reverse; }
+        
+        .ops-text { flex: 1; padding-right: 2rem; display: flex; flex-direction: column; justify-content: center; }
+        .ops-item:nth-child(even) .ops-text { padding-right: 0; padding-left: 2rem; }
+        
+        .ops-title { font-size: 2rem; margin-bottom: 2rem; font-weight: 500; line-height: 1.4; color: var(--title-color); letter-spacing: 0.05em; }
+        .ops-data { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem; margin-bottom: 2rem; }
+        .ops-data p { font-size: 0.95rem; opacity: 0.85; margin-bottom: 1.2rem; line-height: 1.8; }
+        .ops-data strong { color: var(--title-color); font-weight: 500; display: block; font-size: 0.85rem; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+        .ops-role { border-top: 1px dashed rgba(194, 184, 163, 0.2); padding-top: 1.2rem; font-size: 0.85rem; opacity: 0.9; line-height: 1.6; color: var(--accent-gold); letter-spacing: 0.05em; }
+
+        .ops-video-wrap {
+            flex: 1.2; height: 75vh; aspect-ratio: 9 / 16; margin: 0 auto;
+            position: relative; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6); border: 1px solid var(--glass-border);
+            cursor: none; transform: translateZ(0); background: rgba(255,255,255,0.02);
+        }
+        .ops-video-wrap .video-cover, .ops-video-wrap video {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+            transition: opacity 0.6s var(--fluid-easing), transform 1.2s var(--fluid-easing);
+        }
+        .ops-video-wrap video { z-index: 0; opacity: 0; transform: scale(1.05); }
+        .ops-video-wrap .video-cover { z-index: 1; opacity: 0.7; filter: grayscale(0.1); }
+        .ops-video-wrap:hover .video-cover { opacity: 0; transform: scale(1.08); }
+        .ops-video-wrap:hover video { opacity: 1; transform: scale(1); }
+
+        /* 05. Content IP */
+        .ip-hero {
+            width: 100%; aspect-ratio: 21 / 9; 
+            position: relative; border-radius: 8px; overflow: hidden;
+            margin-bottom: 2rem; cursor: none;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.6s var(--fluid-easing), box-shadow 0.6s, border-color 0.6s;
+            background: rgba(255,255,255,0.02);
+        }
+        .ip-hero .video-cover, .ip-hero video {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+            transition: opacity 0.6s var(--fluid-easing), transform 1.2s var(--fluid-easing);
+        }
+        .ip-hero video { z-index: 0; opacity: 0; transform: scale(1.05); }
+        .ip-hero .video-cover { z-index: 1; opacity: 0.7; filter: grayscale(0.1); }
+        .ip-hero:hover { transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.6); border-color: rgba(194, 184, 163, 0.4); }
+        .ip-hero:hover .video-cover { opacity: 0; transform: scale(1.05); }
+        .ip-hero:hover video { opacity: 1; transform: scale(1); }
+        
+        .ip-hero-info {
+            position: absolute; bottom: 0; left: 0; width: 100%; z-index: 2;
+            padding: 3rem 2rem 2rem;
+            background: linear-gradient(to top, rgba(5,5,5,0.95) 0%, transparent 100%);
+            pointer-events: none;
+            transition: transform 0.5s var(--fluid-easing), opacity 0.5s;
+        }
+        .ip-hero:hover .ip-hero-info { opacity: 0; transform: translateY(20px); }
+
+        .ip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 1rem; }
+        .ip-card { padding: 2rem; cursor: none; transition: transform 0.4s; min-height: 420px; display: flex; flex-direction: column; }
+        .ip-card:hover { transform: translateY(-10px); border-color: rgba(194, 184, 163, 0.3); }
+        .ip-img { width: 100%; aspect-ratio: 4/3; position: relative; border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem; background: rgba(255,255,255,0.02);}
+        .ip-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .ip-card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 500; }
+        .ip-card p { font-size: 0.85rem; opacity: 0.7; line-height: 1.6; }
+
+        .data-card { background: linear-gradient(135deg, rgba(20,20,20,0.6), rgba(5,5,5,0.8)); justify-content: center; }
+        .data-ul { list-style: none; margin-top: 1.5rem; }
+        .data-ul li { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 1rem 0; }
+        .data-ul li:last-child { border-bottom: none; }
+        .d-key { display: block; font-size: 0.7rem; color: var(--accent-gold); letter-spacing: 0.1em; margin-bottom: 0.3rem; text-transform: uppercase; }
+        .d-val { display: block; font-size: 0.9rem; color: var(--title-color); }
+
+        /* 06. 视觉档案 */
+        .archive-masonry { column-count: 3; column-gap: 1.5rem; margin-top: 3rem; }
+        .archive-item { 
+            break-inside: avoid; margin-bottom: 1.5rem; position: relative; 
+            border-radius: 6px; overflow: hidden; cursor: none; 
+            border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            transition: transform 0.6s var(--fluid-easing), border-color 0.6s, box-shadow 0.6s; 
+            background: rgba(255,255,255,0.02); min-height: 200px;
+            transform-origin: center center;
+        }
+        
+        .archive-item img {
+            width: 100%;
+            height: auto !important; 
+            display: block;
+            transition: transform 1.5s var(--fluid-easing), filter 0.8s var(--fluid-easing);
+            filter: grayscale(0.2) contrast(1.05);
+        }
+        
+        .archive-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0.2) 50%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem 1rem; opacity: 0; transition: opacity 0.5s; }
+        
+        .archive-item:hover .archive-overlay { opacity: 1; }
+        
+        .archive-item:hover { 
+            transform: scale(1.15); 
+            border-color: rgba(194, 184, 163, 0.4); 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
+            z-index: 50; 
+        }
+        .archive-item:hover img { transform: scale(1.02); filter: grayscale(0) contrast(1.1); }
+        
+        .archive-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.3rem; color: var(--title-color); }
+        .archive-desc { font-size: 0.7rem; color: var(--text-secondary); opacity: 0.8; }
+        
+        .archive-masonry:hover .archive-item:not(:hover) { opacity: 0.4; filter: blur(2px); }
+
+        /* 07. The Studio */
+        .studio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 4rem; }
+        .studio-img { width: 100%; aspect-ratio: 4/3; border-radius: 8px; overflow: hidden; position: relative; background: rgba(255,255,255,0.02);}
+        .studio-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.2) contrast(1.1); }
+        .studio-content { display: flex; flex-direction: column; gap: 2.5rem; }
+        .s-item { border-left: 2px solid rgba(194, 184, 163, 0.2); padding-left: 1.5rem; transition: border-color 0.4s; }
+        .s-item:hover { border-color: var(--accent-gold); }
+        .s-item h4 { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.8rem; letter-spacing: 0.05em; }
+        .s-item p { font-size: 0.9rem; opacity: 0.8; line-height: 1.7; }
+
+        /* 08. Space & Aesthetics */
+        .matrix-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2rem; margin-top: 4rem; }
+        .work-card { 
+            position: relative; cursor: none; border-radius: 4px; 
+            transition: box-shadow 0.4s, transform 0.4s; overflow: hidden;
+            width: 100%; display: block; background: rgba(255,255,255,0.02);
+            min-height: 350px; 
+        }
+        .work-card:nth-child(1) { grid-column: span 8; height: 400px; }
+        .work-card:nth-child(2) { grid-column: span 4; height: 400px; } 
+        .work-card:nth-child(3) { grid-column: span 12; height: 350px; }
+        .work-card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.15); }
+        .work-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.5s var(--fluid-easing); }
+        .work-card:hover img { transform: scale(1.04); }
+        .matrix-grid:hover .work-card:not(:hover) { opacity: 0.5; filter: grayscale(0.5); transition: opacity 0.5s, filter 0.5s; }
+        
+        .work-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 3rem 1.5rem 1.5rem; background: linear-gradient(to top, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0) 100%); color: var(--title-color); z-index: 2; pointer-events: none; }
+        .work-info h3 { font-size: 1.1rem; margin-bottom: 0.4rem; font-weight: 500; }
+        .work-info p { font-size: 0.8rem; opacity: 0.8; font-weight: 400;}
+
+        /* Footer */
+        .footer-block { padding-top: 5rem; padding-bottom: 4rem; text-align: center; }
+        .cta-box { max-width: 600px; margin: 0 auto 4rem; padding: 4rem 3rem; border-radius: 12px; }
+        .cta-box h2 { font-size: 1.8rem; margin-bottom: 1.5rem; line-height: 1.4; text-transform: none; letter-spacing: 0; }
+        .qr-placeholder { width: 140px; height: 140px; margin: 2rem auto 0; border: 1px dashed rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; opacity: 0.6; }
+        .contact-info { display: flex; justify-content: center; gap: 3rem; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; opacity: 0.6; }
+
+        /* --- 导师重构：移动端呼吸感响应式处理 (Mobile First) --- */
+        @media (max-width: 1024px) {
+            /* 1. 强制内收边界，防止贴边产生的窒息感 */
+            .container { padding: 0 6%; } 
+            
+            .hero-metrics { flex-direction: column; gap: 2rem; }
+            .profile-grid, .studio-grid { grid-template-columns: 1fr; gap: 4rem; }
+            .data-fusion-grid { grid-template-columns: 1fr; gap: 4rem; }
+            .data-wall-grid { grid-template-columns: 1fr; gap: 3rem; }
+            
+            /* 2. 重塑垂直节奏，拉开极大间距 */
+            .ops-list { gap: 8rem; margin-top: 4rem; } 
+            .ops-item, .ops-item:nth-child(even) { flex-direction: column; gap: 3rem; }
+            .ops-text, .ops-item:nth-child(even) .ops-text { padding-right: 0; padding-left: 0; }
+            
+            /* 3. 废除移动端 65vh 强制高度，恢复 9:16 自然比例，并内收宽度 */
+            .ops-video-wrap { width: 90%; height: auto; aspect-ratio: 9 / 16; margin: 0 auto; border-radius: 12px; }
+            
+            .ip-hero { aspect-ratio: 16/9; }
+            .ip-grid, .matrix-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+            .work-card:nth-child(1), .work-card:nth-child(2), .work-card:nth-child(3) { grid-column: span 1; height: 300px; }
+            
+            /* 瀑布流在平板和手机间维持双列，但加大缝隙 */
+            .archive-masonry { column-count: 2; gap: 1rem; }
+            
+            .control-panel { display: none; }
+            .section-block { padding: 5rem 0; }
+        }
+
+        @media (max-width: 768px) {
+            /* 移动端极致情况下的终极留白保护 */
+            .container { padding: 0 8%; } 
+            .hero-slogan { font-size: 2.2rem; }
+            .section-headline { font-size: 1.8rem; }
+            
+            /* 在已有 8% padding 的保护下，允许视频满宽，视觉上依旧有极佳呼吸感 */
+            .ops-video-wrap { width: 100%; border-radius: 8px; } 
+            .contact-info { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 动态背景系统 -->
+    <div class="ambient-bg"></div>
+    <canvas id="dustCanvas"></canvas>
+
+    <!-- 自定义雷达鼠标 -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <!-- 顶部消散遮罩 -->
+    <div class="top-mask"></div>
+
+    <div class="fixed-logo">LIAO HAORAN</div>
+
+    <!-- 頂奢黑膠進度指示器 -->
+    <div class="progress-knob-wrapper">
+        <div class="knob-container">
+            <div class="knob-inner" id="knobInner">
+                <div class="knob-dot"></div>
+            </div>
+        </div>
+        <div class="progress-text" id="progressText">SCROLL</div>
+    </div>
+    
+    <!-- 導航 -->
+    <nav id="smart-nav" class="control-panel">
+        <a href="#data-narrative" class="nav-item hover-target">DATA</a>
+        <a href="#brand-ops" class="nav-item hover-target">BRAND OPS.</a>
+        <a href="#content-ip" class="nav-item hover-target">CONTENT IP</a>
+        <a href="#visual-archive" class="nav-item hover-target">ARCHIVE</a>
+    </nav>
+
+    <!-- 01. Hero：导师优化文案，强调运营属性 -->
+    <section class="hero-block" id="hero">
+        <video class="hero-video" autoplay loop muted playsinline preload="metadata">
+            <source src="videos/showreel.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-slogan anim-element active">
+                以专业视听构建<br>
+                <span>商业转化壁垒</span>
+            </h1>
+            <div class="section-sub anim-element active d-1" style="margin: 0 auto 3rem;">2025-2026 VISUAL OPERATIONS REPORT</div>
+            
+            <div class="hero-metrics anim-element active d-2">
+                <div class="h-metric-item hover-target">
+                    <span class="h-metric-num">10+</span>
+                    <span class="h-metric-lbl">高客单转化</span>
+                </div>
+                <div class="h-metric-item hover-target">
+                    <span class="h-metric-num">1000+</span>
+                    <span class="h-metric-lbl">月均私域涨粉</span>
+                </div>
+                <div class="h-metric-item hover-target">
+                    <span class="h-metric-num">8.4W+</span>
+                    <span class="h-metric-lbl">最高自然播放</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 統一滾動主體區 -->
+    <div class="container">
+        
+        <!-- 02. Profile & Resume -->
+        <section class="section-block" id="profile">
+            <div class="section-title anim-element">PROFILE & RESUME</div>
+            <h2 class="section-headline anim-element">跨界全案运营大脑</h2>
+            <p class="section-sub anim-element d-1">从视觉传达到商业转化的精密闭环构建者。</p>
+            
+            <div class="profile-grid anim-element d-2">
+                <div class="profile-avatar glass-card hover-target">
+                    <img src="images/portrait.jpg" alt="廖浩然" loading="lazy">
+                </div>
+                <div>
+                    <ul class="resume-list">
+                        <li>
+                            <span class="r-time">2025.02 - Present</span>
+                            <span class="r-title hover-target">柏林之声华东运营中心 · 新媒体全案运营</span>
+                            <span class="r-desc">独立操盘全平台账号，主导创意策划、拍摄调色及视觉定调。0投放月均自然涨粉1000+，单月实现高净值线索精准获客10+。</span>
+                        </li>
+                        <li>
+                            <span class="r-time">2021.04 - 2025.02</span>
+                            <span class="r-title hover-target">大地之野教育科技 · 核心摄影师</span>
+                            <span class="r-desc">连续三年荣获“优秀自然摄影师”，负责千万级商业活动高光抓拍与品牌视觉存档。</span>
+                        </li>
+                        <li>
+                            <span class="r-time">Academic Background</span>
+                            <span class="r-title hover-target">公共空间设计(硕) / 视觉传达设计(本)</span>
+                            <span class="r-desc">具备极强的跨部门统筹能力，能将跨学科背景转化为复杂线下项目中的落地优势。</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03. Data Narrative：导师优化文案，抛弃自嗨 -->
+        <section class="section-block" id="data-narrative">
+            <div class="section-title anim-element">02 / DATA NARRATIVE</div>
+            <h2 class="section-headline anim-element">商业转化追踪体系</h2>
+            <p class="section-sub anim-element d-1">[ 核心链路 ] 摒弃自嗨，用数据校验视觉，以商业结果定义内容有效性。</p>
+
+            <!-- Hero 数据墙 -->
+            <div class="data-wall-grid anim-element d-2">
+                <div class="data-stat hover-target">
+                    <div class="stat-value counter-el" data-target="150" data-suffix="%">0%</div>
+                    <div class="stat-label">单日留资峰值提升</div>
+                </div>
+                <div class="data-stat hover-target">
+                    <div class="stat-value counter-el" data-target="100" data-suffix="%">0%</div>
+                    <div class="stat-label">线下高端到场率</div>
+                </div>
+                <div class="data-stat hover-target">
+                    <div class="stat-value counter-el" data-target="30" data-suffix="%">0%</div>
+                    <div class="stat-label">长图排版完读率提升</div>
+                </div>
+            </div>
+
+            <!-- 雷达与时间轴 -->
+            <div class="data-fusion-grid anim-element d-3">
+                <!-- 无坐标轴极简雷达 -->
+                <div class="radar-box glass-card hover-target">
+                    <span class="radar-label rl-top">Visuals</span>
+                    <span class="radar-label rl-tr">Strategy</span>
+                    <span class="radar-label rl-br">Traffic</span>
+                    <span class="radar-label rl-bot">Data</span>
+                    <span class="radar-label rl-bl">Execution</span>
+                    <span class="radar-label rl-tl">Copywriting</span>
+                    
+                    <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                        <polygon class="radar-polygon" points="150,50 230,110 210,210 150,240 70,200 90,100" />
+                        <circle class="radar-dot" cx="150" cy="50" r="4" />
+                        <circle class="radar-dot" cx="230" cy="110" r="4" />
+                        <circle class="radar-dot" cx="210" cy="210" r="4" />
+                        <circle class="radar-dot" cx="150" cy="240" r="4" />
+                        <circle class="radar-dot" cx="70" cy="200" r="4" />
+                        <circle class="radar-dot" cx="90" cy="100" r="4" />
+                    </svg>
+                </div>
+                
+                <!-- 呼吸态时间轴 -->
+                <div class="timeline-box">
+                    <div class="timeline-track"></div>
+                    <div class="timeline-item hover-target">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content glass-card">
+                            <span class="tl-time">2025.04 (Project Q2)</span>
+                            <h4 class="tl-title">视觉系统重构期</h4>
+                            <p class="tl-desc">确立品牌专属视觉基调，抛弃传统器材参数堆砌，通过电影级分镜建立品牌视觉护城河。</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item hover-target">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content glass-card">
+                            <span class="tl-time">2025.08 (Project Q3)</span>
+                            <h4 class="tl-title">私域流量池爆破</h4>
+                            <p class="tl-desc">借助短视频矩阵与线下红酒品鉴跨界，单月零投放截获10+高精准意向客户，完成闭环。</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item hover-target">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content glass-card">
+                            <span class="tl-time">2026.01 (Project Q1)</span>
+                            <h4 class="tl-title">全链路 SOP 标准化</h4>
+                            <p class="tl-desc">从内容造血到线下声学空间布光，建立可复制的工业化执行标准与数据监测体系。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04. Brand Operations：导师优化文案，降调务实 -->
+        <section class="section-block" id="brand-ops">
+            <div class="section-title anim-element">03 / BRAND OPERATIONS</div>
+            <h2 class="section-headline anim-element">高客单价业务的视听闭环</h2>
+            <p class="section-sub anim-element d-1">[ 业务逻辑 ] 痛点洞察 ➔ 视觉定调 ➔ 实景执行 ➔ 留资转化复盘</p>
+
+            <div class="ops-list">
+                <!-- 巨幕 1 -->
+                <div class="ops-item anim-element d-2">
+                    <div class="ops-text">
+                        <span class="ops-tag">痛点洞察</span>
+                        <h3 class="ops-title">为什么顶级音响要配一把锁</h3>
+                        <div class="ops-data">
+                            <p><strong>洞察分析</strong>客群厌倦参数堆砌，痛点在于“独处仪式感”。</p>
+                            <p><strong>策略执行</strong>确立品牌专属视觉基调，建立情绪锚点。</p>
+                            <p><strong>核心数据</strong>单条最高自然播放量突破 8.4W+。</p>
+                        </div>
+                        <div class="ops-role">[ 职能 ] 独立分镜 | 场地光影 | 主机位 (Z6 III)</div>
+                    </div>
+                    <div class="ops-video-wrap hover-target">
+                        <img src="images/cover-1.jpg" alt="视频封面" class="video-cover" loading="lazy">
+                        <video src="videos/vertical-1.mp4" loop muted playsinline preload="metadata"></video>
+                    </div>
+                </div>
+                
+                <!-- 巨幕 2 -->
+                <div class="ops-item anim-element d-2">
+                    <div class="ops-text">
+                        <span class="ops-tag">认知降维</span>
+                        <h3 class="ops-title">物理阻尼感与听觉视觉化</h3>
+                        <div class="ops-data">
+                            <p><strong>视觉转译</strong>用微距镜头放大 Tannoy 铭牌的物理阻尼感。</p>
+                            <p><strong>听觉视觉化</strong>将“松香味”提炼为暖调光影，降低认知门槛。</p>
+                            <p><strong>核心数据</strong>矩阵月均稳定产出 2W-5W 级爆款。</p>
+                        </div>
+                        <div class="ops-role">[ 职能 ] 核心策划 | 微距掌机 | 达芬奇色彩管理</div>
+                    </div>
+                    <div class="ops-video-wrap hover-target">
+                        <img src="images/cover-2.jpg" alt="视频封面" class="video-cover" loading="lazy">
+                        <video src="videos/vertical-2.mp4" loop muted playsinline preload="metadata"></video>
+                    </div>
+                </div>
+                
+                <!-- 巨幕 3 -->
+                <div class="ops-item anim-element d-2">
+                    <div class="ops-text">
+                        <span class="ops-tag">收割链路</span>
+                        <h3 class="ops-title">高客单价线索留资逻辑</h3>
+                        <div class="ops-data">
+                            <p><strong>导流路径</strong>公域种草 ➔ 评论区专业答疑 ➔ 私域一对一。</p>
+                            <p><strong>运营复盘</strong>从纯视觉输出，平滑过渡为客服级信任闭环。</p>
+                            <p><strong>核心数据</strong>单月 0 投放，截获高精准意向客户 10+。</p>
+                        </div>
+                        <div class="ops-role">[ 职能 ] 整体操盘 | 漏斗设计 | 客服 SOP 承接</div>
+                    </div>
+                    <div class="ops-video-wrap hover-target">
+                        <img src="images/cover-3.jpg" alt="视频封面" class="video-cover" loading="lazy">
+                        <video src="videos/vertical-3.mp4" loop muted playsinline preload="metadata"></video>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05. Content IP -->
+        <section class="section-block" id="content-ip">
+            <div class="section-title anim-element">04 / CONTENT IP</div>
+            <h2 class="section-headline anim-element">个人化 IP 矩阵拆解</h2>
+            <p class="section-sub anim-element d-1">[ 案例：阿烨日记 ] 从纪实到生活方式，建立高粘性造血矩阵。</p>
+
+            <div class="ip-hero glass-card anim-element d-2 hover-target">
+                <img src="images/ip-hero.jpg" alt="核心IP视觉" class="video-cover" loading="lazy">
+                <video src="videos/ip-hero.mp4" loop muted playsinline preload="metadata"></video>
+                <div class="ip-hero-info">
+                    <span class="ops-tag" style="margin-bottom: 0.8rem;">Flagship IP</span>
+                    <h3 style="font-size: 1.5rem; color: var(--title-color); font-weight: 500; margin-bottom: 0.5rem; letter-spacing: 0.05em;">核心视听阵地</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.8; max-width: 600px; line-height: 1.6;">通过电影级宽画幅长视频，构建品牌深度叙事。</p>
+                </div>
+            </div>
+
+            <div class="ip-grid">
+                <div class="ip-card glass-card anim-element d-3 hover-target">
+                    <div class="ip-img"><img src="images/cd.jpg" alt="地域文化纪实" loading="lazy"></div>
+                    <h3>地域文化与爆款纪实</h3>
+                    <p>将舟山渔文化降维转化为原生态 Vlog。利用粗犷的视觉张力，单条突破 4.5W+ 播放，打造高辨识度地域 IP。</p>
+                </div>
+                <div class="ip-card glass-card anim-element d-4 hover-target">
+                    <div class="ip-img"><img src="images/3322.jpg" alt="空间美学" loading="lazy"></div>
+                    <h3>空间美学与生活方式</h3>
+                    <p>依托 Loft 物理空间，结合自然主义与中古审美，打造“日记体”专栏。将对光影的把控转化为粉丝稳定的阅读预期。</p>
+                </div>
+                <div class="ip-card glass-card data-card anim-element d-4 hover-target">
+                    <h3 style="margin-bottom: 0;">全链路视觉企划 SOP</h3>
+                    <p style="opacity:0.6; font-size:0.8rem;">工业化内容造血流水线</p>
+                    <ul class="data-ul">
+                        <li><span class="d-key">Script & Planning</span><span class="d-val">分镜独立策划与大纲统筹</span></li>
+                        <li><span class="d-key">Shooting & Gear</span><span class="d-val">Z6 III 单兵作战与微距调度</span></li>
+                        <li><span class="d-key">Color Grading</span><span class="d-val">DaVinci Resolve 色彩节点管理</span></li>
+                        <li><span class="d-key">Operation Loop</span><span class="d-val">单人实现从 0 到 1 运营闭环</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06. 视觉档案：导师优化文案，强调规范与体系 -->
+        <section class="section-block" id="visual-archive">
+            <div class="section-title anim-element">05 / VISUAL ARCHIVE</div>
+            <h2 class="section-headline anim-element">核心视觉物料档案</h2>
+            <p class="section-sub anim-element d-1">[ 视觉延展 ] 统一视觉规范，建立具备高转化率的品牌宣发物料体系。</p>
+
+            <div class="archive-masonry anim-element d-2">
+                <div class="archive-item hover-target">
+                    <img src="images/poster-burmester.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">Burmester 疗愈日</div></div>
+                </div>
+                <div class="archive-item hover-target">
+                    <img src="images/poster-wine.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">红酒庄跨界品鉴</div></div>
+                </div>
+                <div class="archive-item hover-target">
+                    <img src="images/poster7.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">社媒矩阵排版</div></div>
+                </div>
+                <div class="archive-item hover-target">
+                    <img src="images/poster1-brand.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">品牌概念视觉</div></div>
+                </div>
+                <div class="archive-item hover-target">
+                    <img src="images/poster2-event.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">线下展厅指引</div></div>
+                </div>
+                <div class="archive-item hover-target">
+                    <img src="images/poster3-social.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">节气特调视觉</div></div>
+                </div>
+                 <div class="archive-item hover-target">
+                    <img src="images/poster4-campaign.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">宣发物料</div></div>
+                </div>
+                 <div class="archive-item hover-target">
+                    <img src="images/poster5.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">视听语言概念</div></div>
+                </div>
+                 <div class="archive-item hover-target">
+                    <img src="images/poster6.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">节日情感营销</div></div>
+                </div>
+                <div class="archive-item hover-target">
+                    <img src="images/poster8.jpg" alt="海报" loading="lazy">
+                    <div class="archive-overlay"><div class="archive-title">自然影像商业化</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 07. The Studio：导师优化文案，强调执行力 -->
+        <section class="section-block" id="studio">
+            <div class="section-title anim-element">06 / THE STUDIO</div>
+            <h2 class="section-headline anim-element">复杂线下场景统筹执行力</h2>
+            <p class="section-sub anim-element d-1">从线上内容输出到线下物理空间的标准化落地。</p>
+
+            <div class="studio-grid">
+                <div class="studio-img glass-card anim-element d-1 hover-target">
+                    <img src="images/eco-lab.jpg" alt="工作室实录" loading="lazy">
+                </div>
+                <div class="studio-content anim-element d-2">
+                    <div class="s-item hover-target">
+                        <h4>The Lab: 严苛色彩管理</h4>
+                        <p>依托 Nikon Z6 III 的 12bit N-RAW 录制，建立 RED Log3G10 定制化工作流，确保视觉质感的绝对一致性。</p>
+                    </div>
+                    <div class="s-item hover-target">
+                        <h4>Expert Synergy: 跨界协同</h4>
+                        <p>跨界协同植物设计师与声学专家，解决线下材质反光与收音难题。</p>
+                    </div>
+                    <div class="s-item hover-target">
+                        <h4>Execution: 极限交付</h4>
+                        <p>展示在 15 天极限工期下，兼顾场地声学改造与布光拍摄的统筹交付力。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 08. Space & Aesthetics：导师优化文案，落地为策略 -->
+        <section class="section-block" id="space-aesthetics">
+            <div class="section-title anim-element">07 / SPACE & AESTHETICS</div>
+            <h2 class="section-headline anim-element">空间与环境视觉策略</h2>
+            <p class="section-sub anim-element d-1">[ 业务逻辑 ] 空间结构分析 ➔ 复杂光影攻坚 ➔ 品牌视觉锚点建立</p>
+
+            <div class="matrix-grid anim-element d-2">
+                <div class="work-card glass-card hover-target">
+                    <img src="images/matrix1-burmester.jpg" alt="空间">
+                    <div class="work-info">
+                        <h3>Hi-Fi 视听室实景控制</h3>
+                        <p>提前攻克吸音材料与现场布光冲突。</p>
+                    </div>
+                </div>
+                <div class="work-card glass-card hover-target">
+                    <img src="images/matrix2-nature.jpg" alt="自然">
+                    <div class="work-info">
+                        <h3>复杂户外环境光影捕捉</h3>
+                        <p>2022-2024 年度优秀自然摄影师</p>
+                    </div>
+                </div>
+                <div class="work-card glass-card hover-target">
+                    <img src="images/matrix4-camping.jpg" alt="公共">
+                    <div class="work-info">
+                        <h3>视觉重塑与空间降维</h3>
+                        <p>用 70-200mm 提炼生活方式情绪表达</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 09. Footer -->
+        <footer class="section-block footer-block">
+            <div class="cta-box glass-card anim-element hover-target">
+                <!-- 导师修改：转化 CTA 更显专业 -->
+                <h2>寻找懂业务、懂转化的<br>视觉运营操盘手？</h2>
+                <p style="color: var(--accent-gold); font-size: 0.9rem; letter-spacing: 0.1em; margin-top: 1rem;">扫码获取完整简历与项目排期。</p>
+                <div class="qr-placeholder">[ WeChat QR ]</div>
+            </div>
+            <div class="contact-info anim-element d-1">
+                <span>T: +86 133 9658 3099</span>
+                <span>L: Zhejiang, Hangzhou</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // --- 1. 微尘悬浮特效 ---
+        const dustCanvas = document.getElementById('dustCanvas');
+        if (dustCanvas) {
+            const ctx = dustCanvas.getContext('2d');
+            let particles = [];
+            function resizeDust() { dustCanvas.width = window.innerWidth; dustCanvas.height = window.innerHeight; }
+            window.addEventListener('resize', resizeDust); resizeDust();
+            class Particle {
+                constructor() { this.x = Math.random() * dustCanvas.width; this.y = Math.random() * dustCanvas.height; this.vx = (Math.random() - 0.5) * 0.15; this.vy = (Math.random() - 0.5) * 0.15; this.radius = Math.random() * 1.5 + 0.5; this.baseAlpha = Math.random() * 0.4 + 0.1; this.alphaPhase = Math.random() * Math.PI * 2; }
+                update() { this.x += this.vx; this.y += this.vy; if (this.x < 0) this.x = dustCanvas.width; if (this.x > dustCanvas.width) this.x = 0; if (this.y < 0) this.y = dustCanvas.height; if (this.y > dustCanvas.height) this.y = 0; this.alphaPhase += 0.01; }
+                draw() { const currentAlpha = this.baseAlpha + Math.sin(this.alphaPhase) * 0.15; ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = `rgba(194, 184, 163, ${Math.max(0, currentAlpha)})`; ctx.fill(); }
+            }
+            for (let i = 0; i < 70; i++) particles.push(new Particle());
+            function animateDust() { ctx.clearRect(0, 0, dustCanvas.width, dustCanvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateDust); }
+            animateDust();
+        }
+
+        // --- 2. 雷达鼠标 ---
+        const isDesktop = window.matchMedia("(pointer: fine)").matches;
+        if (isDesktop) {
+            const dot = document.getElementById('cursor-dot');
+            const outline = document.getElementById('cursor-outline');
+            let mouseX = 0, mouseY = 0, outlineX = 0, outlineY = 0;
+            window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`; });
+            const animateCursor = () => { outlineX += (mouseX - outlineX) * 0.15; outlineY += (mouseY - outlineY) * 0.15; outline.style.transform = `translate(${outlineX}px, ${outlineY}px)`; requestAnimationFrame(animateCursor); };
+            animateCursor();
+            document.querySelectorAll('.hover-target, a').forEach(el => { el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover')); el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover')); });
+        }
+
+        // --- 3. 视差浮现引擎 ---
+        const revealElements = document.querySelectorAll('.anim-element');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- 4. 黑胶进度旋钮与实时滚动映射 ---
+        const knobInner = document.getElementById('knobInner');
+        const sections = document.querySelectorAll('.section-block, #hero');
+        const navItems = document.querySelectorAll('.nav-item');
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = scrollTop / docHeight;
+            knobInner.style.transform = `rotate(${scrollPercent * 360}deg)`;
+            let currentSection = '';
+            sections.forEach(section => { if (scrollY >= section.offsetTop - window.innerHeight / 3) currentSection = section.getAttribute('id'); });
+            navItems.forEach(item => { item.classList.remove('active'); if (item.getAttribute('href') === `#${currentSection}`) item.classList.add('active'); });
+        });
+
+        // --- 5. 剧场模式短视频悬停播放 ---
+        document.querySelectorAll('.ops-video-wrap, .ip-hero').forEach(wrap => {
+            const video = wrap.querySelector('video');
+            if (video) {
+                wrap.addEventListener('mouseenter', () => { video.play().catch(e => console.log('Autoplay blocked')); });
+                wrap.addEventListener('mouseleave', () => { video.pause(); });
+            }
+        });
+
+        // --- 6. 滚动触发数字递增动画引擎 ---
+        const counterObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                    entry.target.classList.add('counted');
+                    const target = parseInt(entry.target.getAttribute('data-target'));
+                    const suffix = entry.target.getAttribute('data-suffix') || '';
+                    let current = 0;
+                    const duration = 2000;
+                    const startTime = performance.now();
+                    
+                    const updateCounter = (currentTime) => {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const ease = 1 - Math.pow(1 - progress, 4);
+                        current = Math.floor(ease * target);
+                        entry.target.innerText = current + suffix;
+                        if (progress < 1) {
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            entry.target.innerText = target + suffix;
+                        }
+                    };
+                    requestAnimationFrame(updateCounter);
+                }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.counter-el').forEach(el => counterObserver.observe(el));
+    </script>
+</body>
+</html>
